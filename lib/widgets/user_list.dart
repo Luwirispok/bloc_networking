@@ -1,27 +1,28 @@
+import 'package:bloc_networking/models/user.dart';
 import 'package:flutter/material.dart';
 
 class UserList extends StatelessWidget {
   const UserList({
     Key? key,
-    required this.itemCount,
+    required this.userList,
   }) : super(key: key);
 
-  final int itemCount;
+  final List<User> userList;
 
   @override
   Widget build(BuildContext context) => ListView.separated(
-        itemCount: itemCount,
+    padding: EdgeInsets.all(10),
+        itemCount: userList.length,
         itemBuilder: (context, index) => Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
               color: index % 2 == 0 ? const Color(0xffD6EFED) : const Color(0xffB7D3DF),
               borderRadius: const BorderRadius.all(Radius.circular(15)),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xffF8F9D7).withOpacity(0.23),
-                  offset: const Offset(5.0, 5.0),
-                  blurRadius: 10.0,
-                  spreadRadius: 2.0,
+                  color: const Color(0xff354259).withOpacity(0.23),
+                  offset: const Offset(2, 5),
+                  blurRadius: 2.0,
+                  spreadRadius: 0,
                 ), //BoxShadow
                 const BoxShadow(
                   color: Colors.white,
@@ -32,7 +33,7 @@ class UserList extends StatelessWidget {
               ]),
           child: ListTile(
             leading: Text(
-              'ID: $index',
+              'ID: ${userList[index].id}',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             title: Column(
@@ -40,11 +41,11 @@ class UserList extends StatelessWidget {
               children: [
                 Center(
                     child: Text(
-                  'My name',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  userList[index].name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 )),
-                Text('email: '),
-                Text('phone: '),
+                Text('email: ${userList[index].email}'),
+                Text('phone: ${userList[index].phone}'),
               ],
             ),
           ),
