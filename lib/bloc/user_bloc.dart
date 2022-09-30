@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_networking/models/user.dart';
 import 'package:bloc_networking/services/user_repository.dart';
-import 'package:meta/meta.dart';
 
 part 'user_event.dart';
 

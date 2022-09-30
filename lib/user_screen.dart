@@ -1,4 +1,5 @@
 import 'package:bloc_networking/bloc/user_bloc.dart';
+import 'package:bloc_networking/cubit/connection_cubit.dart';
 import 'package:bloc_networking/widgets/action_button.dart';
 import 'package:bloc_networking/widgets/user_list.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +10,21 @@ class ExampleBlocNetworking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) =>
-      Scaffold(
-        appBar: AppBar(
-          title: const Text('BLoC with network connection'),
-          centerTitle: true,
-        ),
-        body: SafeArea(
-          child: _buildBody(context),
+      BlocListener<UserBloc, UserState>(
+        listener: (context, state) {
+          if (state is UserLoadedState) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Загрузка успешна')));
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('User list'),
+            centerTitle: true,
+          ),
+          floatingActionButton: _buildFloatingActionButton(),
+          body: SafeArea(
+            child: _buildBody(context),
+          ),
         ),
       );
 
@@ -55,15 +64,40 @@ class ExampleBlocNetworking extends StatelessWidget {
   Widget _buildUserList() {
     return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
       if (state is UserEmptyState) {
-        return const Center(child: Text('empty', style: TextStyle(fontSize: 20),));
+        return const Center(
+            child: Text(
+              'empty',
+              style: TextStyle(fontSize: 20),
+            ));
       }
       if (state is UserLoadingState) {
         return const Center(child: CircularProgressIndicator());
       }
       if (state is UserLoadedState) {
-        return Expanded(child: UserList(userList: state.loadedUser,));
+        return Expanded(
+            child: UserList(
+              userList: state.loadedUser,
+            ));
+      }
+      if (state is UserErrorState){
+        return const Center(child: Text('Connection error'));
       }
       return const SizedBox();
     });
   }
+
+  Widget _buildFloatingActionButton() =>
+      BlocBuilder<ConnectionCubit, MyConnectionState>(
+        builder: (context, state) {
+          return Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: state.connected ? Colors.green : Colors.red,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.language, color: Colors.white,),
+          );
+        },
+      );
 }
